@@ -4,7 +4,12 @@ import {
   validItemQuantity,
 } from "../middleware/schemaMiddleware.js";
 import { validItemExist } from "../middleware/itemMiddleware.js";
-import { postCart } from "../controllers/cartController.js";
+import {
+  deleteCart,
+  finishCart,
+  postCart,
+  putCart,
+} from "../controllers/cartController.js";
 
 const castRouter = express.Router();
 castRouter.post(
@@ -16,6 +21,16 @@ castRouter.post(
   validItemExist,
   postCart
 );
-// castRouter.delete("/cart", );
+castRouter.put(
+  "/cart/:idItem",
+  //   validToken,
+  //   validUser,
+  validItemId,
+  validItemQuantity,
+  validItemExist,
+  putCart
+);
+castRouter.delete("/cart", deleteCart);
+castRouter.post("/cart-payment", finishCart, deleteCart);
 
 export default castRouter;
