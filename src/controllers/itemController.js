@@ -25,6 +25,18 @@ export async function getItem(_, res) {
   }
 }
 
+export async function getItemId(_, res) {
+  const { idItem } = res.locals;
+  try {
+    const items = await db
+      .collection("items")
+      .findOne({ _id: ObjectId(idItem) });
+    return res.status(200).send(items);
+  } catch (err) {
+    return res.sendStatus(500);
+  }
+}
+
 export async function updateItem(_, res) {
   const { idItem, nameItem, valueItem, quantityItem } = res.locals;
   try {
