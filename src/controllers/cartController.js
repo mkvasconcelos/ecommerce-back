@@ -46,6 +46,18 @@ export async function postCart(req, res) {
   }
 }
 
+export async function getCart(req, res) {
+  const { idUser } = req.body;
+  try {
+    const cart = await db
+      .collection("cart")
+      .findOne({ userId: ObjectId(idUser) });
+    return res.status(200).send(cart);
+  } catch (err) {
+    return res.sendStatus(500);
+  }
+}
+
 export async function putCart(req, res) {
   //   const { idItem, quantityItem, idUser } = res.locals;
   const { idItem, quantityItem } = res.locals;

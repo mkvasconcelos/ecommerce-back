@@ -11,8 +11,8 @@ import {
   putCart,
 } from "../controllers/cartController.js";
 
-const castRouter = express.Router();
-castRouter.post(
+const cartRouter = express.Router();
+cartRouter.post(
   "/cart/:idItem",
   //   validToken,
   //   validUser,
@@ -21,7 +21,7 @@ castRouter.post(
   validItemExist,
   postCart
 );
-castRouter.put(
+cartRouter.put(
   "/cart/:idItem",
   //   validToken,
   //   validUser,
@@ -30,7 +30,7 @@ castRouter.put(
   validItemExist,
   putCart
 );
-castRouter.delete("/cart", deleteCart);
-castRouter.post("/cart-payment", finishCart, deleteCart);
+cartRouter.delete("/cart", deleteCart);
+cartRouter.post("/cart-payment", finishCart, deleteCart);
 
-export default castRouter;
+export default cartRouter;
