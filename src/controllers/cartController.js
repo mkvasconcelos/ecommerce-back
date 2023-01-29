@@ -168,7 +168,7 @@ export async function finishCart(_, res, next) {
       .collection("items")
       .findOne({ _id: ObjectId(userCart.order[i].idItem) });
     if (userCart.order[i].quantityItem > item.quantityItem) {
-      return res.status(400).send("This item is out of stock.");
+      return res.status(400).send(`${item.nameItem} is out of stock.`);
     }
   }
   for (let i = 0; i < userCart.order.length; i++) {
