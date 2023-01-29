@@ -14,7 +14,7 @@ export async function signInFunction(req, res) {
     await db.collection("sessions").insertOne({
       userId: findUser._id,
       token: token,
-      createdAt: dayjs().format("DD/MM/YYYY HH-mm"),
+      createdAt: Date.now(),
     });
     res.status(200).send({ token, email, name: findUser.name });
   } catch (err) {

@@ -164,6 +164,14 @@ export async function finishCart(_, res, next) {
     return res.status(400).send("Your cart is empty!");
   }
   for (let i = 0; i < userCart.order.length; i++) {
+    let item = await db
+      .collection("items")
+      .findOne({ _id: ObjectId(userCart.order[i].idItem) });
+    if (userCart.order[i].quantityItem > item.quantityItem) {
+      return res.status(400).send("This item is out of stock.");
+    }
+  }
+  for (let i = 0; i < userCart.order.length; i++) {
     await db.collection("items").updateOne(
       { _id: ObjectId(userCart.order[i].idItem) },
       {
