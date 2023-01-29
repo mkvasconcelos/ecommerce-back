@@ -4,6 +4,11 @@ import {
   schemaItemQuantity,
 } from "../schemas/itemSchema.js";
 
+import {
+  schemaSignIn,
+  schemaSignUp
+} from "../schemas/signSchema"
+
 export async function validItem(req, res, next) {
   const { nameItem, imageItem, valueItem, quantityItem } = req.body;
   const newValueItem = Number(valueItem);
@@ -47,4 +52,26 @@ export async function validItemQuantity(req, res, next) {
   }
   res.locals.quantityItem = newQuantityItem;
   next();
+}
+
+export async function validSignUp(req, res, next){
+  const {error} = schemaSignUp.validate(req.body, { abortEarly: false });
+      
+  if (error) {
+    const errMessage = error.details.map(err => err.message);
+    return res.status(422).send(errMessage);
+  }
+  
+  next()
+}
+
+export async function validSignIn(req, res, next){
+  const {error} = schemaSignIn.validate(req.body, { abortEarly: false });
+      
+  if (error) {
+    const errMessage = error.details.map(err => err.message);
+    return res.status(422).send(errMessage)
+  }
+
+  next()
 }
