@@ -7,12 +7,12 @@ export async function tokenValidation(req, res, next) {
         
         if(!token) return res.send(422).status("Token não encontrado.");
 
-        const getToken = await db.collection().findOne({token: token});
+        const getToken = await db.collection("sessions").findOne({token: token});
 
-        if(!findToken) return res.status(400).send("Sua sessão expirou, faça login novamente");
+        if(!getToken) return res.status(400).send("Sua sessão expirou, faça login novamente");
 
         res.locals.recentToken = token;
-        
+
         next();
     }catch(err){
         res.status(500).send(err)

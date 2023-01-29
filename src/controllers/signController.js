@@ -38,7 +38,7 @@ export async function signUpFunction(req,res){
     if(emailAvailable) return res.status(400).send("Tente outro nome de usuário ou email");
 
     try{
-        await db.collection().insertOne({email: email, name:name, phone: phone, pwd: hashedPwd});
+        await db.collection("users").insertOne({email: email, name:name, phone: phone, pwd: hashedPwd});
         
         res.sendStatus(200);
 
