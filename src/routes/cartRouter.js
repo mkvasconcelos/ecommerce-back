@@ -7,11 +7,18 @@ import { validItemExist } from "../middleware/itemMiddleware.js";
 import {
   deleteCart,
   finishCart,
+  getCart,
   postCart,
   putCart,
 } from "../controllers/cartController.js";
 
 const cartRouter = express.Router();
+cartRouter.get(
+  "/cart",
+  // validToken,
+  // validUser
+  getCart
+);
 cartRouter.post(
   "/cart/:idItem",
   //   validToken,

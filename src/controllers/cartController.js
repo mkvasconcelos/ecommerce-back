@@ -52,7 +52,6 @@ export async function getCart(req, res) {
     const cart = await db
       .collection("cart")
       .findOne({ userId: ObjectId(idUser) });
-    return res.status(200).send(cart);
   } catch (err) {
     return res.sendStatus(500);
   }
@@ -110,19 +109,28 @@ export async function finishCart(req, _, next) {
   const userCart = await db.collection("cart").findOne({
     userId: ObjectId(idUser),
   });
+  let totalCart = 0;
+  for (let i = 1; i < userCart.order.length; i++) {
+    totalCart += userCart.order[i].valueItem * userCart.order[i].quantityItem;
+    await db.collection("items").updateOne(
+      { _id: ObjectId(userCart.order.idItem) },
+      {
+        $inc: { quantityItem: userCart.order.quantityItem },
+      }
+    );
+  }
   await db.collection("users").updateOne(
     { _id: ObjectId(idUser) },
     {
       $push: { order: userCart.order },
     }
   );
-  let totalCart = 0;
-  for (let i = 1; i < userCart.order.length; i++) {
-    console.log(userCart.order[i].valueItem);
-    console.log(userCart.order[i].quantityItem);
-    totalCart += userCart.order[i].valueItem * userCart.order[i].quantityItem;
-  }
-  console.log(totalCart);
+  await db.collection("users").updateOne(
+    { _id: ObjectId(idUser) },
+    {
+      $push: { order: userCart.order },
+    }
+  );
   await db.collection("admin").updateOne(
     { role: "admin" },
     {
