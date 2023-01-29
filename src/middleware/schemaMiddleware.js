@@ -3,11 +3,7 @@ import {
   schemaItemId,
   schemaItemQuantity,
 } from "../schemas/itemSchema.js";
-
-import {
-  schemaSignIn,
-  schemaSignUp
-} from "../schemas/signSchema"
+import { schemaSignIn, schemaSignUp } from "../schemas/signSchema.js";
 
 export async function validItem(req, res, next) {
   const { nameItem, imageItem, valueItem, quantityItem } = req.body;
@@ -54,24 +50,20 @@ export async function validItemQuantity(req, res, next) {
   next();
 }
 
-export async function validSignUp(req, res, next){
-  const {error} = schemaSignUp.validate(req.body, { abortEarly: false });
-      
+export async function validSignUp(req, res, next) {
+  const { error } = schemaSignUp.validate(req.body, { abortEarly: false });
   if (error) {
-    const errMessage = error.details.map(err => err.message);
+    const errMessage = error.details.map((err) => err.message);
     return res.status(422).send(errMessage);
   }
-  
-  next()
+  next();
 }
 
-export async function validSignIn(req, res, next){
-  const {error} = schemaSignIn.validate(req.body, { abortEarly: false });
-      
+export async function validSignIn(req, res, next) {
+  const { error } = schemaSignIn.validate(req.body, { abortEarly: false });
   if (error) {
-    const errMessage = error.details.map(err => err.message);
-    return res.status(422).send(errMessage)
+    const errMessage = error.details.map((err) => err.message);
+    return res.status(422).send(errMessage);
   }
-
-  next()
+  next();
 }

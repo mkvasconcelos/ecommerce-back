@@ -1,12 +1,12 @@
-import { Router } from 'express';
-import {validSignUp, validSignIn} from "../middleware/schemaMiddleware.js";
-import {schemaSignIn, schemaSignUp} from "../schemas/signSchema.js"; 
-import {signInFunction, signUpFunction} from "../controllers/signController.js";
+import { Router } from "express";
+import { validSignUp, validSignIn } from "../middleware/schemaMiddleware.js";
+import {
+  signInFunction,
+  signUpFunction,
+} from "../controllers/signController.js";
 
-const signRoute = Router();
+const signRouter = Router();
+signRouter.post("/sign-in", validSignIn, signInFunction);
+signRouter.post("/sign-up", validSignUp, signUpFunction);
 
-signRoute.post("/sign-in", validSignIn(schemaSignIn) ,signInFunction);
-
-signRoute.post("/sign-up", validSignUp(schemaSignUp) ,signUpFunction);
-
-export default signRoute;
+export default signRouter;

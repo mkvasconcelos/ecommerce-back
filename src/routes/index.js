@@ -6,4 +6,5 @@ import signRouter from "./signRouter.js";
 const router = express.Router();
 router.use(itemRouter);
 router.use(cartRouter);
+router.use(signRouter);
 export default router;

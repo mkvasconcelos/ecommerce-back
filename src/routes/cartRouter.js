@@ -6,23 +6,19 @@ import {
 import { validItemExist } from "../middleware/itemMiddleware.js";
 import {
   deleteCart,
+  deleteItem,
   finishCart,
   getCart,
   postCart,
   putCart,
 } from "../controllers/cartController.js";
+import { tokenValidation } from "../middleware/tokenMiddleware.js";
 
 const cartRouter = express.Router();
-cartRouter.get(
-  "/cart",
-  // validToken,
-  // validUser
-  getCart
-);
+cartRouter.get("/cart", tokenValidation, getCart);
 cartRouter.post(
   "/cart/:idItem",
-  //   validToken,
-  //   validUser,
+  tokenValidation,
   validItemId,
   validItemQuantity,
   validItemExist,
@@ -30,14 +26,14 @@ cartRouter.post(
 );
 cartRouter.put(
   "/cart/:idItem",
-  //   validToken,
-  //   validUser,
+  tokenValidation,
   validItemId,
   validItemQuantity,
   validItemExist,
   putCart
 );
-cartRouter.delete("/cart", deleteCart);
-cartRouter.post("/cart-payment", finishCart, deleteCart);
+cartRouter.delete("/cart", tokenValidation, deleteCart);
+cartRouter.delete("/cart/:idItem", tokenValidation, validItemId, deleteItem);
+cartRouter.post("/cart-payment", tokenValidation, finishCart, deleteCart);
 
 export default cartRouter;
