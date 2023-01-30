@@ -48,3 +48,16 @@ export async function signUpFunction(req, res) {
     return res.status(500).send(err.message);
   }
 }
+
+export async function signInAdmin(req, res) {
+  const { email, pwd } = req.body;
+  try {
+    const findAdmin = await db.collection("admin").findOne({ email });
+    if (!findAdmin) return res.status(400).send("Email or password wrong.");
+    const comparePwd = pwd === findAdmin.pwd;
+    if (!comparePwd) return res.status(400).send("Email or password wrong.");
+    return res.status(200).send(findAdmin);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+}

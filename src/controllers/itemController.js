@@ -18,7 +18,11 @@ export async function postItem(_, res) {
 
 export async function getItem(_, res) {
   try {
-    const items = await db.collection("items").find({}).toArray();
+    const items = await db
+      .collection("items")
+      .find({})
+      .sort({ valueItem: 1 })
+      .toArray();
     return res.status(200).send(items);
   } catch (err) {
     return res.sendStatus(500);

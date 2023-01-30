@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import dayjs from "dayjs";
 import db from "../database/database.js";
 
 export async function postCart(_, res) {
@@ -115,7 +116,10 @@ export async function deleteCart(_, res) {
         $set: { order: [], totalOrder: 0 },
       }
     );
-    return res.sendStatus(200);
+    const cart = await db
+      .collection("cart")
+      .findOne({ userId: ObjectId(idUser) });
+    return res.status(200).send(cart);
   } catch (err) {
     return res.sendStatus(500);
   }
@@ -146,7 +150,10 @@ export async function deleteItem(_, res) {
           $pull: { order: { idItem } },
         }
       );
-      return res.sendStatus(200);
+      const cart = await db
+        .collection("cart")
+        .findOne({ userId: ObjectId(idUser) });
+      return res.status(200).send(cart);
     } catch (err) {
       return res.sendStatus(500);
     }
@@ -182,7 +189,9 @@ export async function finishCart(_, res, next) {
   await db.collection("users").updateOne(
     { _id: ObjectId(idUser) },
     {
-      $push: { order: userCart.order },
+      $push: {
+        order: { date: new Date(), orders: userCart.order },
+      },
     }
   );
   await db.collection("admin").updateOne(
