@@ -163,8 +163,8 @@ export async function deleteItem(_, res) {
 }
 
 export async function finishCart(_, res, next) {
-  const accountSid = "AC4c9d4c09830c1e34cddbd34c85b9be5f";
-  const authToken = "263f5111549594e006740041ba396309";
+  const accountSid = process.env.ACCOUNT_SID;
+  const authToken = process.env.AUTH_TOKEN;
   const client = twilio(accountSid, authToken);
   const { idUser } = res.locals;
   const user = await db.collection("users").findOne({
