@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
-import dayjs from "dayjs";
 import db from "../database/database.js";
+import twilio from "twilio";
 
 export async function postCart(_, res) {
   const { idItem, quantityItem, idUser } = res.locals;
@@ -163,7 +163,13 @@ export async function deleteItem(_, res) {
 }
 
 export async function finishCart(_, res, next) {
+  const accountSid = "AC4c9d4c09830c1e34cddbd34c85b9be5f";
+  const authToken = "263f5111549594e006740041ba396309";
+  const client = twilio(accountSid, authToken);
   const { idUser } = res.locals;
+  const user = await db.collection("users").findOne({
+    _id: ObjectId(idUser),
+  });
   const userCart = await db.collection("cart").findOne({
     userId: ObjectId(idUser),
   });
@@ -200,5 +206,18 @@ export async function finishCart(_, res, next) {
       $inc: { income: userCart.totalOrder },
     }
   );
+  let text = `Oi ${user.name}, obrigado por comprar conosco! O seu pedido foi:\n`;
+  for (let i = 0; i < userCart.order.length; i++) {
+    text += `\n${userCart.order[i].quantityItem} x ${userCart.order[i].nameItem}`;
+  }
+  text += `\n\nO total da sua compra foi de R$ ${userCart.totalOrder}. Para maiores informações entre em contato com mateuskvasconcelos@gmail.com`;
+  client.messages
+    .create({
+      body: text,
+      from: "whatsapp:+5521965113209",
+      to: `whatsapp:+55${user.phone}`,
+    })
+    .then()
+    .done();
   next();
 }
