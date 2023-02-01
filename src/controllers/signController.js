@@ -1,21 +1,25 @@
 import bcrypt from "bcrypt";
-import { v4 as uuidV4 } from "uuid";
 import db from "../database/database.js";
-import dayjs from "dayjs";
+import jwt from "jsonwebtoken";
 
 export async function signInFunction(req, res) {
   const { email, pwd } = req.body;
+  const secretKey = process.env.JWT_SECRET;
+  const validity = { expiresIn: 60 * 30 };
   try {
     const findUser = await db.collection("users").findOne({ email });
     if (!findUser) return res.status(400).send("Email or password wrong.");
     const comparePwd = bcrypt.compareSync(pwd, findUser.pwd);
     if (!comparePwd) return res.status(400).send("Email or password wrong.");
-    const token = uuidV4();
-    await db.collection("sessions").insertOne({
+    const session = await db.collection("sessions").insertOne({
       userId: findUser._id,
-      token: token,
       createdAt: Date.now(),
     });
+    const token = jwt.sign(
+      { userId: findUser._id, session: session.insertedId },
+      secretKey,
+      validity
+    );
     res.status(200).send({ token, email, name: findUser.name });
   } catch (err) {
     res.status(500).send(err);
