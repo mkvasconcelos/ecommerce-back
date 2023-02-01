@@ -214,7 +214,7 @@ export async function finishCart(_, res, next) {
   client.messages
     .create({
       body: text,
-      from: "whatsapp:+5521965113209",
+      from: "whatsapp:+14155238886",
       to: `whatsapp:+55${user.phone}`,
     })
     .then()
